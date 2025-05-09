@@ -5,14 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import java.util.Objects;
 
 public class MainApp extends Application {
@@ -35,7 +31,13 @@ public class MainApp extends Application {
     private void showMainDashboard() {
         Label lblWelcome = new Label(" Welcome To Event\nManagement System");
         lblWelcome.setStyle("-fx-font-size: 20px;");
+
         ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/event.png"))));
+        img.setPreserveRatio(true);
+        img.setSmooth(true);
+        img.fitWidthProperty().bind(primaryStage.widthProperty().multiply(0.4));
+        img.fitHeightProperty().bind(primaryStage.heightProperty().multiply(0.6));
+
         Button btnRegister = new Button("Register");
         Button btnLogin = new Button("Login");
         Button btnExit = new Button("Exit");
@@ -44,21 +46,24 @@ public class MainApp extends Application {
         btnLogin.setOnAction(e -> showLoginScene());
         btnExit.setOnAction(e -> primaryStage.close());
 
-
         VBox vbox = new VBox(10, lblWelcome, btnRegister, btnLogin, btnExit);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPrefWidth(300);
-        HBox hBox = new HBox(10, img, vbox);
+        vbox.setSpacing(10);
+
+        vbox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.4));
+
+        btnRegister.prefWidthProperty().bind(vbox.widthProperty());
+        btnLogin.prefWidthProperty().bind(vbox.widthProperty());
+        btnExit.prefWidthProperty().bind(vbox.widthProperty());
+
+        HBox hBox = new HBox(20, img, vbox);
         hBox.setAlignment(Pos.CENTER);
-        hBox.setPrefWidth(600);
-        hBox.setPrefHeight(400);
-
-
+        hBox.setSpacing(20);
 
         StackPane root = new StackPane();
         root.getChildren().addAll(hBox);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
     }
