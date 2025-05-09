@@ -33,6 +33,7 @@ public class Organizer extends User implements CRUD {
     public void organizerDashboard(Stage stage, Organizer organizer, Runnable goBack) {
         Label welcome = new Label("Organizer Dashboard");
         Label plz = new Label("Please Select An Option");
+
         Button dashboardBtn = new Button("Event Dashboard");
         Button viewAttendeesBtn = new Button("View My Attendees");
         Button availableRoomsBtn = new Button("View Available Rooms");
@@ -46,7 +47,7 @@ public class Organizer extends User implements CRUD {
         availableRoomsBtn.setOnAction(e -> viewAvailableRooms(stage, () -> organizerDashboard(stage, organizer, goBack)));
         viewBalanceBtn.setOnAction(e -> viewBalance(stage, organizer, () -> organizerDashboard(stage, organizer, goBack)));
         statsBtn.setOnAction(e -> viewStatistics(stage, organizer, () -> organizerDashboard(stage, organizer, goBack)));
-        ChatBtn.setOnAction(e-> {
+        ChatBtn.setOnAction(e -> {
             try {
                 OpenOrganizerChat(organizer);
             } catch (Exception ex) {
@@ -54,31 +55,34 @@ public class Organizer extends User implements CRUD {
             }
         });
         logoutBtn.setOnAction(e -> goBack.run());
-        VBox v = new VBox();
-        v.getChildren().addAll(welcome,plz);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
+        HBox welcomeBox = new HBox(welcome);
+        welcomeBox.setAlignment(Pos.CENTER);
+        grid.add(welcomeBox, 0, 0, 3, 1);
 
-        grid.add(v,0,0);
-        grid.add(dashboardBtn,0,1);
-        grid.add(viewAttendeesBtn,1,1);
-        grid.add(availableRoomsBtn,2,1);
-        grid.add(viewBalanceBtn,0,2);
-        grid.add(statsBtn,1,2);
-        grid.add(ChatBtn,2,2);
-        grid.add(logoutBtn,1,4);
+        HBox plzBox = new HBox(plz);
+        plzBox.setAlignment(Pos.CENTER);
+        grid.add(plzBox, 0, 1, 3, 1);
 
-
+        grid.add(dashboardBtn, 0, 2);
+        grid.add(viewAttendeesBtn, 1, 2);
+        grid.add(availableRoomsBtn, 2, 2);
+        grid.add(viewBalanceBtn, 0, 3);
+        grid.add(statsBtn, 1, 3);
+        grid.add(ChatBtn, 2, 3);
+        grid.add(logoutBtn, 1, 5);
 
         Scene scene = new Scene(grid, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Organizer Dashboard");
     }
+
     public void OpenOrganizerChat(Organizer organizer) throws Exception {
         OrganizerChat.setOrganizer(organizer);
         new OrganizerChat().start(new Stage());
@@ -94,8 +98,9 @@ public class Organizer extends User implements CRUD {
         int row = 0;
 
         Label title = new Label("--- My Event Attendees ---");
-        GridPane.setColumnSpan(title, 2);
-        grid.add(title, 0, row++);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, row++, 2, 1);
 
         boolean hasEvents = false;
 
@@ -124,6 +129,7 @@ public class Organizer extends User implements CRUD {
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
+
 
 
     public void viewAvailableRooms(Stage stage, Runnable goBack) {
@@ -166,8 +172,8 @@ public class Organizer extends User implements CRUD {
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.add(label, 0, 0);
-        layout.add(dateLabel, 0, 1);
+        layout.add(dateLabel, 0, 0);
+        layout.add(label, 0, 1);
         layout.add(eventDateDP, 1, 0);
         layout.add(timecb, 1, 1);
         layout.add(checkBtn, 1, 3);
@@ -187,6 +193,9 @@ public class Organizer extends User implements CRUD {
         layout.setVgap(10);
 
         Label label = new Label("Wallet Balance: $" + organizer.getWallet().getBalance());
+        HBox labelBox = new HBox(label);
+        labelBox.setAlignment(Pos.CENTER);
+
         if (organizer.getWallet().getBalance() == 0.0) {
             showAlert(Alert.AlertType.INFORMATION, "Zero Balance", "You currently have no funds in your wallet.");
         }
@@ -194,7 +203,7 @@ public class Organizer extends User implements CRUD {
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.add(label, 0, 0);
+        layout.add(labelBox, 0, 0);
         layout.add(backBtn, 0, 1);
 
         Scene scene = new Scene(layout, 700, 400);
@@ -202,14 +211,23 @@ public class Organizer extends User implements CRUD {
         stage.setScene(scene);
     }
 
+
     public void viewStatistics(Stage stage, Organizer organizer, Runnable goBack) {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
+        // Total Earnings
         Label totalLabel = new Label("Total Earnings: $" + organizer.wallet.getBalance());
-        Label breakdown = new Label("Earnings per Event:");
+        HBox totalBox = new HBox(totalLabel);
+        totalBox.setAlignment(Pos.CENTER);
 
+        // Breakdown Label
+        Label breakdown = new Label("Earnings per Event:");
+        HBox breakdownBox = new HBox(breakdown);
+        breakdownBox.setAlignment(Pos.CENTER);
+
+        // Earnings List
         VBox earningsList = new VBox(5);
         boolean hasEarnings = false;
         earningsList.setAlignment(Pos.CENTER);
@@ -226,10 +244,14 @@ public class Organizer extends User implements CRUD {
             showAlert(Alert.AlertType.INFORMATION, "No Earnings", "No events found or no attendees joined.");
         }
 
+        // Back Button
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.getChildren().addAll(totalLabel, breakdown, earningsList, backBtn);
+        // Add components to layout
+        layout.getChildren().addAll(totalBox, breakdownBox, earningsList, backBtn);
+
+        // Create scene and set it on stage
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
@@ -353,6 +375,7 @@ public class Organizer extends User implements CRUD {
 
     }
 
+
     public void read(Stage stage, Object obj, Runnable goBack) {
         Organizer organizer = (Organizer) obj;
         GridPane layout = new GridPane();
@@ -360,9 +383,13 @@ public class Organizer extends User implements CRUD {
         layout.setAlignment(Pos.CENTER);
         layout.setVgap(10);
 
+        // Title Label
         Label title = new Label("--- Your Organized Events ---");
+
+        // ListView for events
         ListView<String> eventList = new ListView<>();
         boolean hasEvents = false;
+
 
         for (Event event : Database.getEvents()) {
             if (event.getOrganizer().equals(organizer)) {
@@ -371,20 +398,35 @@ public class Organizer extends User implements CRUD {
             }
         }
 
+
         if (!hasEvents) {
             showAlert(Alert.AlertType.INFORMATION, "No Events", "You have not organized any events yet.");
         }
 
+
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.add(title, 0, 0);
-        layout.add(eventList, 0, 1);
-        layout.add(backBtn, 0, 2);
+
+        HBox titleHBox = new HBox(title);
+        titleHBox.setAlignment(Pos.CENTER);
+        titleHBox.setSpacing(10);
+
+
+        VBox eventListVBox = new VBox(10);
+        eventListVBox.setAlignment(Pos.CENTER);
+        eventListVBox.getChildren().addAll(eventList, backBtn);
+
+
+        layout.add(titleHBox, 0, 0);
+        layout.add(eventListVBox, 0, 1);
+
 
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
+        stage.setTitle("Your Organized Events");
+        stage.show();
     }
 
     public void update(Stage stage, Object obj, Runnable goBack) {
@@ -410,15 +452,20 @@ public class Organizer extends User implements CRUD {
         layout.setHgap(10);
         layout.setVgap(10);
 
+
         Label title = new Label("--- Update Organized Event ---");
+
+
         ComboBox<Event> evtcb = new ComboBox<>();
         evtcb.getItems().addAll(eventList);
         evtcb.setPromptText("Select an Event");
 
-        Label eventprc = new Label();
+
         Label eventtle = new Label();
-        Label eventctg = new Label();
         Label eventroom = new Label();
+        Label eventctg = new Label();
+        Label eventprc = new Label();
+
 
         evtcb.setOnAction(e -> {
             Event selected = evtcb.getSelectionModel().getSelectedItem();
@@ -430,29 +477,31 @@ public class Organizer extends User implements CRUD {
             }
         });
 
-        Label statusLabel = new Label();
-        Button updateButton = new Button("Update");
 
+        Button updateButton = new Button("Update");
         updateButton.setOnAction(e -> {
             Event selected = evtcb.getSelectionModel().getSelectedItem();
             if (selected != null) {
                 GridPane grdpane = new GridPane();
+                grdpane.setPadding(new Insets(20));
+                grdpane.setAlignment(Pos.CENTER);
+                grdpane.setHgap(10);
+                grdpane.setVgap(10);
+
 
                 Label evttlelbl = new Label("Title: ");
                 Label evtroomlbl = new Label("Room: ");
                 Label evtctglbl = new Label("Category: ");
                 Label evtprclbl = new Label("Price: ");
-
                 TextField tletf = new TextField(selected.getTitle());
                 ComboBox<Room> roomcb = new ComboBox<>();
                 roomcb.getItems().addAll(Database.getRooms());
                 roomcb.setValue(selected.getRoom());
-
                 ComboBox<Category> ctgcb = new ComboBox<>();
                 ctgcb.getItems().addAll(Database.getCategories());
                 ctgcb.setValue(selected.getCategory());
-
                 TextField prctf = new TextField(String.valueOf(selected.getPrice()));
+
 
                 grdpane.add(evttlelbl, 0, 0);
                 grdpane.add(tletf, 1, 0);
@@ -463,10 +512,6 @@ public class Organizer extends User implements CRUD {
                 grdpane.add(evtprclbl, 0, 3);
                 grdpane.add(prctf, 1, 3);
 
-                grdpane.setHgap(10);
-                grdpane.setVgap(10);
-                grdpane.setPadding(new Insets(20));
-                grdpane.setAlignment(Pos.CENTER);
 
                 Button updateBtn = new Button("Update");
                 updateBtn.setOnAction(e2 -> {
@@ -482,11 +527,14 @@ public class Organizer extends User implements CRUD {
                     evtcb.getSelectionModel().select(selected);
                 });
 
+
                 Button backBtn2 = new Button("Back");
                 backBtn2.setOnAction(e2 -> goBack.run());
 
+
                 grdpane.add(updateBtn, 1, 4);
                 grdpane.add(backBtn2, 2, 4);
+
 
                 Scene scene2 = new Scene(grdpane, 700, 400);
                 scene2.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
@@ -496,17 +544,25 @@ public class Organizer extends User implements CRUD {
             }
         });
 
+
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> goBack.run());
 
-        layout.add(title, 0, 0, 2, 1);
-        layout.add(evtcb, 0, 1, 2, 1);
-        layout.add(eventtle, 0, 2);
-        layout.add(eventroom, 0, 3);
-        layout.add(eventctg, 0, 4);
-        layout.add(eventprc, 0, 5);
-        layout.add(updateButton, 0, 6);
-        layout.add(backButton, 1, 6);
+
+        HBox titleHBox = new HBox(10, title);
+        titleHBox.setAlignment(Pos.CENTER);
+
+        VBox eventDetailsVBox = new VBox(10, evtcb, eventtle, eventroom, eventctg, eventprc);
+        eventDetailsVBox.setAlignment(Pos.CENTER);
+
+        HBox buttonHBox = new HBox(10, updateButton, backButton);
+        buttonHBox.setAlignment(Pos.CENTER);
+
+
+        layout.add(titleHBox, 0, 0, 2, 1);
+        layout.add(eventDetailsVBox, 0, 1, 2, 1);
+        layout.add(buttonHBox, 0, 2, 2, 1);
+
 
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
@@ -514,7 +570,6 @@ public class Organizer extends User implements CRUD {
         stage.setTitle("Update Event");
         stage.show();
     }
-
     public void delete(Stage stage, Object obj, Runnable goBack) {
         Organizer organizer = (Organizer) obj;
         GridPane layout = new GridPane();
@@ -523,7 +578,10 @@ public class Organizer extends User implements CRUD {
         layout.setHgap(10);
         layout.setVgap(10);
 
+
         Label title = new Label("--- Delete Organized Event ---");
+
+
         ListView<String> eventList = new ListView<>();
         boolean hasEvents = false;
 
@@ -534,10 +592,12 @@ public class Organizer extends User implements CRUD {
             }
         }
 
+
         if (!hasEvents) {
             showAlert(Alert.AlertType.INFORMATION, "No Events", "You have not organized any events yet.");
             return;
         }
+
 
         Button deleteBtn = new Button("Delete");
         deleteBtn.setOnAction(e -> {
@@ -554,13 +614,25 @@ public class Organizer extends User implements CRUD {
             }
         });
 
+
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.add(title, 0, 0, 2, 1);
-        layout.add(eventList, 0, 1, 2, 1);
-        layout.add(deleteBtn, 0, 2);
-        layout.add(backBtn, 1, 2);
+
+        HBox titleHBox = new HBox(10, title);
+        titleHBox.setAlignment(Pos.CENTER);
+
+        VBox eventListVBox = new VBox(10, eventList);
+        eventListVBox.setAlignment(Pos.CENTER);
+
+        HBox buttonHBox = new HBox(10, deleteBtn, backBtn);
+        buttonHBox.setAlignment(Pos.CENTER);
+
+
+        layout.add(titleHBox, 0, 0, 2, 1);
+        layout.add(eventListVBox, 0, 1, 2, 1);
+        layout.add(buttonHBox, 0, 2, 2, 1);
+
 
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
@@ -575,18 +647,26 @@ public class Organizer extends User implements CRUD {
         layout.setHgap(10);
         layout.setVgap(10);
 
+
         Label label = new Label("--- Event Dashboard ---");
-        HBox h = new HBox();
-        h.getChildren().addAll(label);
-        h.setAlignment(Pos.CENTER);
+        HBox titleHBox = new HBox(10, label);
+        titleHBox.setAlignment(Pos.CENTER);
+
+
         Button createBtn = new Button("Create new event");
         Button updateBtn = new Button("Update an existing event");
         Button viewBtn = new Button("View my events");
         Button deleteBtn = new Button("Delete an existing event");
         Button backBtn = new Button("Back");
-        HBox hbox = new HBox();
-        hbox.getChildren().add(backBtn);
-        hbox.setAlignment(Pos.CENTER);
+
+
+        VBox buttonVBox = new VBox(10, createBtn, updateBtn, viewBtn, deleteBtn);
+        buttonVBox.setAlignment(Pos.CENTER);
+
+        // Back button in HBox
+        HBox backHBox = new HBox(10, backBtn);
+        backHBox.setAlignment(Pos.CENTER);
+
 
         createBtn.setOnAction(e -> create(stage, organizer, () -> eventDashboard(stage, organizer, goBack)));
         updateBtn.setOnAction(e -> update(stage, organizer, () -> eventDashboard(stage, organizer, goBack)));
@@ -594,12 +674,11 @@ public class Organizer extends User implements CRUD {
         deleteBtn.setOnAction(e -> delete(stage, organizer, () -> eventDashboard(stage, organizer, goBack)));
         backBtn.setOnAction(e -> goBack.run());
 
-        layout.add(h, 0, 0, 2, 1);
-        layout.add(createBtn, 0, 1);
-        layout.add(updateBtn, 1, 1);
-        layout.add(viewBtn, 0, 2);
-        layout.add(deleteBtn, 1, 2);
-        layout.add(hbox, 0, 3,2,1);
+
+        layout.add(titleHBox, 0, 0, 2, 1);
+        layout.add(buttonVBox, 0, 1, 2, 1);
+        layout.add(backHBox, 0, 2, 2, 1);
+
 
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
@@ -607,6 +686,7 @@ public class Organizer extends User implements CRUD {
         stage.setTitle("Event Dashboard");
         stage.show();
     }
+
 
     @Override
     public String toString () {
