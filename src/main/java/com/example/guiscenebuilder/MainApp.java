@@ -6,7 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,7 +35,7 @@ public class MainApp extends Application {
     private void showMainDashboard() {
         Label lblWelcome = new Label(" Welcome To Event\nManagement System");
         lblWelcome.setStyle("-fx-font-size: 20px;");
-
+        ImageView img = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/event.png"))));
         Button btnRegister = new Button("Register");
         Button btnLogin = new Button("Login");
         Button btnExit = new Button("Exit");
@@ -42,18 +44,19 @@ public class MainApp extends Application {
         btnLogin.setOnAction(e -> showLoginScene());
         btnExit.setOnAction(e -> primaryStage.close());
 
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(15);
-        gridPane.setHgap(15);
-        gridPane.setAlignment(Pos.CENTER);
 
-        gridPane.add(lblWelcome, 1, 1, 2, 1);
-        gridPane.add(btnRegister, 0, 2);
-        gridPane.add(btnLogin, 1, 2);
-        gridPane.add(btnExit, 2, 2);
+        VBox vbox = new VBox(10, lblWelcome, btnRegister, btnLogin, btnExit);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPrefWidth(300);
+        HBox hBox = new HBox(10, img, vbox);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setPrefWidth(600);
+        hBox.setPrefHeight(400);
+
+
 
         StackPane root = new StackPane();
-        root.getChildren().addAll( gridPane);
+        root.getChildren().addAll(hBox);
 
         Scene scene = new Scene(root, 600, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
