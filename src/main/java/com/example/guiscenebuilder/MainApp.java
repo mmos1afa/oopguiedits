@@ -24,6 +24,9 @@ public class MainApp extends Application {
         Database.initializeDummyData();
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Event Management System");
+        Image icon = new Image(getClass().getResourceAsStream("/Images/event.png"));
+        primaryStage.getIcons().add(icon);
+
         showMainDashboard();
         primaryStage.show();
     }
