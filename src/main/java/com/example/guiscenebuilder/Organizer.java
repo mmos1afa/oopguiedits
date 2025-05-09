@@ -30,8 +30,8 @@ public class Organizer extends User implements CRUD {
     }
 
     public void organizerDashboard(Stage stage, Organizer organizer, Runnable goBack) {
-        Label welcome = new Label("---Organizer Dashboard---");
-        Label plz = new Label("--Please select an option--");
+        Label welcome = new Label("Organizer Dashboard");
+        Label plz = new Label("Please Select An Option");
         Button dashboardBtn = new Button("Event Dashboard");
         Button viewAttendeesBtn = new Button("View My Attendees");
         Button availableRoomsBtn = new Button("View Available Rooms");
@@ -54,12 +54,24 @@ public class Organizer extends User implements CRUD {
         });
         logoutBtn.setOnAction(e -> goBack.run());
 
-        VBox layout = new VBox(10,welcome,plz, dashboardBtn, viewAttendeesBtn,
-                availableRoomsBtn, viewBalanceBtn, statsBtn,ChatBtn, logoutBtn);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 700, 400);
+        grid.add(welcome,1,0);
+        grid.add(plz,1,1);
+        grid.add(dashboardBtn,0,2);
+        grid.add(viewAttendeesBtn,1,2);
+        grid.add(availableRoomsBtn,3,2);
+        grid.add(viewBalanceBtn,0,3);
+        grid.add(statsBtn,1,3);
+        grid.add(ChatBtn,2,3);
+        grid.add(logoutBtn,1,5);
+
+
+
+        Scene scene = new Scene(grid, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Organizer Dashboard");
