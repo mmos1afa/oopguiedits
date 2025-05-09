@@ -3,10 +3,13 @@ package com.example.guiscenebuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -29,8 +32,8 @@ public class Attendee extends User{
     }
 
     public void attendeeDashboard(Stage stage, Attendee att, Runnable goBack) {
-        Label welcome = new Label("---Attendee Dashboard---");
-        Label plz = new Label("--Please select an option--");
+        Label welcome = new Label("Attendee Dashboard");
+        Label plz = new Label("Please select an option");
         Button btt = new Button("View Profile");
         Button btt2 = new Button("View All Events");
         Button bttt = new Button("Search For Events");
@@ -48,10 +51,28 @@ public class Attendee extends User{
         r.setOnAction(e -> att.viewBalance(stage,()->att.attendeeDashboard(stage,att,goBack)));
         h.setOnAction(e -> att.AddBalance(stage,()->att.attendeeDashboard(stage,att,goBack)));
         z.setOnAction(e -> goBack.run());
+        VBox v = new VBox(10, welcome, plz);
+        v.setAlignment(Pos.CENTER);
 
-        VBox vBox = new VBox(10,welcome,plz, btt, btt2, bttt, b, s, r, h, z);
-        vBox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vBox, 700, 400);
+        VBox v1 = new VBox(10, btt2, bttt, b, s);
+        v1.setAlignment(Pos.CENTER);
+        v1.setPadding(new Insets(10));
+
+        VBox v2 = new VBox(10, r, h, z, btt);
+        v2.setAlignment(Pos.CENTER);
+        v2.setPadding(new Insets(10));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(20);
+        grid.setVgap(20);
+        grid.setPadding(new Insets(30));
+
+        grid.add(v, 1, 1, 2, 1);
+        grid.add(v1, 1, 2);
+        grid.add(v2, 2, 2);
+
+        Scene scene = new Scene(grid, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setTitle("Attendee Dashboard");
         stage.setScene(scene);
@@ -171,11 +192,8 @@ public class Attendee extends User{
     }
 
 
-
-
-
     public void viewProfile(Stage stage, Runnable goBack) {
-        Label lblTitle = new Label("--- Profile Details ---");
+        Label lblTitle = new Label(" Profile Details ");
 
         Label lblUsername = new Label("Username: " + this.username);
         Label lblPassword = new Label("Password: " + this.password);
@@ -185,10 +203,13 @@ public class Attendee extends User{
         Label lblEvents = new Label("Registered Events:");
         TextArea eventsArea = new TextArea();
         eventsArea.setEditable(false);
+        eventsArea.setPrefHeight(150);
 
         if (getRegisteredEvents().isEmpty()) {
             eventsArea.setText("No events registered.");
-        } else {
+        }
+        else
+        {
             StringBuilder sb = new StringBuilder();
             for (Event e : getRegisteredEvents()) {
                 sb.append(e.toString()).append("\n");
@@ -197,22 +218,37 @@ public class Attendee extends User{
         }
 
         Button btnBack = new Button("Back");
-        btnBack.setOnAction(e -> {
-            goBack.run();
-        });
+        btnBack.setOnAction(e -> goBack.run());
 
-        VBox layout = new VBox(10, lblTitle, lblUsername, lblPassword, lblDOB, lblGender, lblEvents, eventsArea, btnBack);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
 
-        Scene scene = new Scene(layout, 500, 500);
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(20));
+        grid.setHgap(10);
+        grid.setVgap(15);
+
+        grid.add(lblTitle, 0, 0, 2, 1);
+        GridPane.setHalignment(lblTitle, HPos.CENTER);
+        grid.add(lblUsername, 0, 1);
+        grid.add(lblDOB, 0, 2);
+
+        grid.add(lblPassword, 1, 1);
+        grid.add(lblGender, 1, 2);
+
+        grid.add(lblEvents, 0, 3, 2, 1);
+        grid.add(eventsArea, 0, 4, 2, 1);
+        grid.add(btnBack, 0, 5, 2, 1);
+        GridPane.setHalignment(btnBack, HPos.CENTER);
+
+        Scene scene = new Scene(grid, 500, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
+        stage.setTitle("Attendee Profile");
     }
 
 
     public void viewBalance(Stage stage,Runnable goBack){
-        Label label=new Label("-----View Wallet Balance-----");
+        Label label=new Label("View Wallet Balance");
         Label label1=new Label("Balance $:"+wallet.getBalance());
         Button button=new Button("Back");
         button.setOnAction(e->goBack.run());
@@ -228,7 +264,7 @@ public class Attendee extends User{
     }
 
     public void AddBalance(Stage stage,Runnable goBack){
-        Label label=new Label("-----Add Balance----");
+        Label label=new Label("Add Balance");
         Label label3= new Label("Enter amount to Deposit");
         TextField txtAmount = new TextField();
         txtAmount.setPromptText("Amount");
@@ -307,7 +343,7 @@ public class Attendee extends User{
         stage.setScene(scene);
     }
     private void searchByCategory(Stage stage,Runnable goBack){
-        Label label=new Label("----Search by Category----");
+        Label label=new Label("Search by Category");
         TextField textField=new TextField();
         Button button=new Button("Search");
         Label lblResults=new Label();
