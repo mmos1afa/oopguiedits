@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -268,6 +269,23 @@ public class Organizer extends User implements CRUD {
         timecb.getItems().addAll("Day", "Night");
         Label dateLabel = new Label("Date: ");
         DatePicker eventDateDP = new DatePicker();
+        eventDateDP.setDayCellFactory(new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker param) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (!item.isAfter(LocalDate.now())) { // disables today and past dates
+                            setDisable(true);
+                            setStyle("-fx-background-color: #EEEEEE;");
+                        }
+                    }
+                };
+            }
+        });
+
         ArrayList<Room> available_rooms = new ArrayList<>();
         Button nextbtn = new Button("Next");
         Button backBtn = new Button("Back");
