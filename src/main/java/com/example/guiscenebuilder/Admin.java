@@ -108,6 +108,24 @@ public class Admin extends User implements CRUD {
         txtName.setPromptText("Enter Category Name");
         Button btnCreate = new Button("Create");
         Button btnBack = new Button("Back");
+        Label lblStatus = new Label();
+
+        txtName.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.trim().isEmpty()) {
+                for (Category category : Database.getCategories()) {
+                    boolean taken = category.getName().equalsIgnoreCase(newVal.trim());
+                    if (taken) {
+                        lblStatus.setText("Category already exists.");
+                        lblStatus.setStyle("-fx-text-fill: red;");
+                        break;
+                    } else {
+                        lblStatus.setText("");
+                    }
+                }
+            } else {
+                lblStatus.setText("");
+            }
+        });
 
         btnCreate.setOnAction(e -> {
             String name = txtName.getText().trim();
@@ -115,10 +133,23 @@ public class Admin extends User implements CRUD {
                 showAlert(Alert.AlertType.ERROR, "Error", "Please enter a category name.");
                 return;
             }
-            Category category = new Category(name);
-            Database.getCategories().add(category);
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Category created successfully");
-            goback.run();
+
+            boolean categoryExists = false;
+            for (Category category : Database.getCategories()) {
+                if (category.getName().equalsIgnoreCase(name)) {
+                    categoryExists = true;
+                    break;
+                }
+            }
+
+            if (categoryExists) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Category already exists.");
+            } else {
+                Category category = new Category(name);
+                Database.getCategories().add(category);
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Category created successfully");
+                goback.run();
+            }
         });
 
         btnBack.setOnAction(e -> goback.run());
@@ -138,18 +169,23 @@ public class Admin extends User implements CRUD {
 
         grid.add(txtName, 1, 1);
 
+        HBox label = new HBox(lblStatus);
+        label.setAlignment(Pos.CENTER);
+        grid.add(label, 0, 2, 2, 1);
+
         HBox btnCreateBox = new HBox(btnCreate);
         btnCreateBox.setAlignment(Pos.CENTER);
-        grid.add(btnCreateBox, 0, 2, 2, 1);
+        grid.add(btnCreateBox, 0, 3, 2, 1);
 
         HBox btnBackBox = new HBox(btnBack);
         btnBackBox.setAlignment(Pos.CENTER);
-        grid.add(btnBackBox, 0, 3, 2, 1);
+        grid.add(btnBackBox, 0, 4, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
+
 
     public void update(Stage stage, Object obj, Runnable goBack) {
         Label title = new Label("Update Category");
