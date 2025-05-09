@@ -58,7 +58,7 @@ public class Attendee extends User{
         v1.setAlignment(Pos.CENTER);
         v1.setPadding(new Insets(10));
 
-        VBox v2 = new VBox(10, r, h, z, btt);
+        VBox v2 = new VBox(10, r, h, btt, z);
         v2.setAlignment(Pos.CENTER);
         v2.setPadding(new Insets(10));
 
@@ -299,7 +299,7 @@ public class Attendee extends User{
     }
 
     public void searchEvents(Stage stage,Runnable goBack){
-//        System.out.println("Please select an option: ");
+
         Label label1=new Label("----Search Events----");
         Button button=new Button("Search By Name");
         Button button1=new Button("Search By Category");

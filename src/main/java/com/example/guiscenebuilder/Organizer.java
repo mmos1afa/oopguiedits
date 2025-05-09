@@ -218,17 +218,17 @@ public class Organizer extends User implements CRUD {
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
-        // Total Earnings
+
         Label totalLabel = new Label("Total Earnings: $" + organizer.wallet.getBalance());
         HBox totalBox = new HBox(totalLabel);
         totalBox.setAlignment(Pos.CENTER);
 
-        // Breakdown Label
+
         Label breakdown = new Label("Earnings per Event:");
         HBox breakdownBox = new HBox(breakdown);
         breakdownBox.setAlignment(Pos.CENTER);
 
-        // Earnings List
+
         VBox earningsList = new VBox(5);
         boolean hasEarnings = false;
         earningsList.setAlignment(Pos.CENTER);
@@ -245,14 +245,12 @@ public class Organizer extends User implements CRUD {
             showAlert(Alert.AlertType.INFORMATION, "No Earnings", "No events found or no attendees joined.");
         }
 
-        // Back Button
         Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> goBack.run());
 
-        // Add components to layout
         layout.getChildren().addAll(totalBox, breakdownBox, earningsList, backBtn);
 
-        // Create scene and set it on stage
+
         Scene scene = new Scene(layout, 700, 400);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
@@ -264,7 +262,7 @@ public class Organizer extends User implements CRUD {
         layoutpane.setPadding(new Insets(20));
         layoutpane.setAlignment(Pos.CENTER);
         Label title = new Label("--- Create Event ---");
-        Label timeTitle = new Label("Time: ");
+        Label timeTitle = new Label("Period: ");
         ComboBox<String> timecb = new ComboBox<>();
         timecb.getItems().addAll("Day", "Night");
         Label dateLabel = new Label("Date: ");
@@ -277,7 +275,7 @@ public class Organizer extends User implements CRUD {
                     public void updateItem(LocalDate item, boolean empty) {
                         super.updateItem(item, empty);
 
-                        if (!item.isAfter(LocalDate.now())) { // disables today and past dates
+                        if (!item.isAfter(LocalDate.now())) {
                             setDisable(true);
                             setStyle("-fx-background-color: #EEEEEE;");
                         }
@@ -401,10 +399,10 @@ public class Organizer extends User implements CRUD {
         layout.setAlignment(Pos.CENTER);
         layout.setVgap(10);
 
-        // Title Label
+
         Label title = new Label("--- Your Organized Events ---");
 
-        // ListView for events
+
         ListView<String> eventList = new ListView<>();
         boolean hasEvents = false;
 
@@ -681,7 +679,7 @@ public class Organizer extends User implements CRUD {
         VBox buttonVBox = new VBox(10, createBtn, updateBtn, viewBtn, deleteBtn);
         buttonVBox.setAlignment(Pos.CENTER);
 
-        // Back button in HBox
+
         HBox backHBox = new HBox(10, backBtn);
         backHBox.setAlignment(Pos.CENTER);
 
