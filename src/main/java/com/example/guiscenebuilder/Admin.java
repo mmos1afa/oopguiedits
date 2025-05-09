@@ -1,14 +1,13 @@
 package com.example.guiscenebuilder;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -23,8 +22,8 @@ public class Admin extends User implements CRUD {
     }
 
     public void adminDashboard(Stage stage,Admin admin , Runnable goback) {
-        Label welcome = new Label("              Admin Dashboard");
-        Label plz = new Label("          Please select An Option");
+        Label welcome = new Label("Admin Dashboard");
+        Label plz = new Label("Please select An Option");
         Button showrooms = new Button("Show all rooms");
         Button showevents = new Button(" Show all events");
         Button showatt = new Button("Show all attendees");
@@ -52,8 +51,13 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(welcome, 1, 0, 2, 1);
-        grid.add(plz, 1, 1, 2, 1);
+        HBox welcomeBox = new HBox(welcome);
+        welcomeBox.setAlignment(Pos.CENTER);
+        grid.add(welcomeBox, 0, 0, 3, 1);
+
+        HBox plzBox = new HBox(plz);
+        plzBox.setAlignment(Pos.CENTER);
+        grid.add(plzBox, 0, 1, 3, 1);
         grid.add(showrooms, 0, 2);
         grid.add(showevents, 0, 3);
         grid.add(showatt, 1, 2);
@@ -73,7 +77,7 @@ public class Admin extends User implements CRUD {
         new AdminChat().start(new Stage());
     }
     public void viewAllRooms(Stage stage , Runnable goback) {
-        Label allrooms = new Label("                             All Rooms");
+        Label allrooms = new Label("All Rooms");
         ListView<String> roomListView = new ListView<>();
         for (Room r : Database.getRooms()) {
             roomListView.getItems().add(r.toString());
@@ -84,53 +88,70 @@ public class Admin extends User implements CRUD {
         pane.setHgap(10);
         pane.setVgap(10);
         pane.setAlignment(Pos.CENTER);
-        pane.add(allrooms,0,0);
-        pane.add(roomListView,0,1);
-        pane.add(back,0,3);
+        HBox allRoomsBox = new HBox(allrooms);
+        allRoomsBox.setAlignment(Pos.CENTER);
+        pane.add(allRoomsBox, 0, 0, 3, 1);
+        HBox listBox = new HBox(roomListView);
+        listBox.setAlignment(Pos.CENTER);
+        pane.add(listBox, 0, 1, 3, 1);
+        HBox backBox = new HBox(back);
+        backBox.setAlignment(Pos.CENTER);
+        pane.add(backBox, 0, 3, 3, 1);
         Scene scene = new Scene(new StackPane(pane),600,500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-
         stage.setScene(scene);
-
-
     }
-    public void create(Stage stage,Object obj, Runnable goback)
-    {
+    public void create(Stage stage, Object obj, Runnable goback) {
         Label title = new Label("Create New Category");
         Label lblName = new Label("Category Name:");
         TextField txtName = new TextField();
         txtName.setPromptText("Enter Category Name");
         Button btnCreate = new Button("Create");
         Button btnBack = new Button("Back");
-        btnCreate.setOnAction(e-> {
-            String name= txtName.getText().trim();
-            if (name.isEmpty())
-            {
-                showAlert(Alert.AlertType.ERROR,"Error", "Please enter a category name.");
+
+        btnCreate.setOnAction(e -> {
+            String name = txtName.getText().trim();
+            if (name.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Please enter a category name.");
                 return;
             }
-            Category category= new Category(name);
+            Category category = new Category(name);
             Database.getCategories().add(category);
-            showAlert(Alert.AlertType.INFORMATION,"Success", "Category created successfully");
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Category created successfully");
             goback.run();
         });
-        btnBack.setOnAction(e-> goback.run());
+
+        btnBack.setOnAction(e -> goback.run());
+
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 0, 0);
-        grid.add(lblName, 0, 1);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
+
+        HBox lblNameBox = new HBox(lblName);
+        lblNameBox.setAlignment(Pos.CENTER);
+        grid.add(lblNameBox, 0, 1);
+
         grid.add(txtName, 1, 1);
-        grid.add(btnCreate, 0, 2);
-        grid.add(btnBack, 0, 4);
+
+        HBox btnCreateBox = new HBox(btnCreate);
+        btnCreateBox.setAlignment(Pos.CENTER);
+        grid.add(btnCreateBox, 0, 2, 2, 1);
+
+        HBox btnBackBox = new HBox(btnBack);
+        btnBackBox.setAlignment(Pos.CENTER);
+        grid.add(btnBackBox, 0, 3, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
-    public void update(Stage stage,Object obj, Runnable goBack) {
+
+    public void update(Stage stage, Object obj, Runnable goBack) {
         Label title = new Label("Update Category");
         Label lblSelect = new Label("Select Category:");
         ListView<String> categoryListView = new ListView<>();
@@ -172,20 +193,34 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 1, 0);
-        grid.add(lblSelect, 0, 1);
+
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
+
+        HBox lblSelectBox = new HBox(lblSelect);
+        lblSelectBox.setAlignment(Pos.CENTER);
+        grid.add(lblSelectBox, 0, 1);
+
         grid.add(categoryListView, 1, 1);
-        grid.add(lblNewName, 0, 2);
+
+        HBox lblNewNameBox = new HBox(lblNewName);
+        lblNewNameBox.setAlignment(Pos.CENTER);
+        grid.add(lblNewNameBox, 0, 2);
+
         grid.add(txtNewName, 1, 2);
-        grid.add(btnUpdate, 0, 4);
-        grid.add(btnBack, 1, 4);
+
+        HBox buttonBox = new HBox(10, btnUpdate, btnBack);
+        buttonBox.setAlignment(Pos.CENTER);
+        grid.add(buttonBox, 0, 4, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
 
-    public void delete(Stage stage,Object obj, Runnable goBack) {
+
+    public void delete(Stage stage, Object obj, Runnable goBack) {
         Label title = new Label("Delete Category");
         Label lblSelect = new Label("Select Category:");
         ListView<String> categoryListView = new ListView<>();
@@ -224,18 +259,28 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 0, 0);
-        grid.add(lblSelect,0,1);
+
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
+
+        HBox lblSelectBox = new HBox(lblSelect);
+        lblSelectBox.setAlignment(Pos.CENTER);
+        grid.add(lblSelectBox, 0, 1);
+
         grid.add(categoryListView, 1, 1);
-        grid.add(btnDelete, 0, 3);
-        grid.add(btnBack, 1, 3);
+
+        HBox buttonBox = new HBox(10, btnDelete, btnBack);
+        buttonBox.setAlignment(Pos.CENTER);
+        grid.add(buttonBox, 0, 3, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
 
-    public void read(Stage stage,Object obj, Runnable goBack) {
+
+    public void read(Stage stage, Object obj, Runnable goBack) {
         Label title = new Label("Existing Categories");
         ListView<String> categoryListView = new ListView<>();
         int i = 1;
@@ -251,14 +296,23 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 0, 0);
-        grid.add(categoryListView, 0, 1);
-        grid.add(btnBack, 0, 3);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 3, 1);
+
+        HBox categoryListBox = new HBox(categoryListView);
+        categoryListBox.setAlignment(Pos.CENTER);
+        grid.add(categoryListBox, 0, 1, 3, 1);
+
+        HBox backBox = new HBox(btnBack);
+        backBox.setAlignment(Pos.CENTER);
+        grid.add(backBox, 0, 3, 3, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
+
 
     public void viewAllEvents(Stage stage, Runnable goBack) {
         Label title = new Label("--- All Events ---");
@@ -274,14 +328,21 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title,0,0);
-        grid.add(eventListView,0,1);
-        grid.add(back,0,3);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
+
+        grid.add(eventListView, 0, 1, 2, 1);
+
+        HBox backBox = new HBox(back);
+        backBox.setAlignment(Pos.CENTER);
+        grid.add(backBox, 0, 3, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
+
     public void viewAllAttendees(Stage stage, Runnable goback) {
         Label title = new Label("---All Attendees---");
         ListView<String> attendeeList = new ListView<>();
@@ -296,20 +357,25 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title,0,0);
-        grid.add(attendeeList,0,1);
-        grid.add(back,0,3);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
 
-        Scene scene = new Scene(new StackPane(grid), 600,500);
+        grid.add(attendeeList, 0, 1, 2, 1);
+
+        HBox backBox = new HBox(back);
+        backBox.setAlignment(Pos.CENTER);
+        grid.add(backBox, 0, 3, 2, 1);
+
+        Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
-    public void viewAllOrganizers(Stage stage, Runnable goback)
-    {
+
+    public void viewAllOrganizers(Stage stage, Runnable goback) {
         Label title = new Label("---All Organizers---");
-        ListView <String> allorg = new ListView<>();
-        for(Organizer o : Database.getOrganizers())
-        {
+        ListView<String> allorg = new ListView<>();
+        for (Organizer o : Database.getOrganizers()) {
             allorg.getItems().add(o.toString());
         }
         Button back = new Button("Back");
@@ -320,18 +386,24 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title,0,0);
-        grid.add(allorg,0,1);
-        grid.add(back,0,3);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
 
-        Scene scene = new Scene(new StackPane(grid),600,500);
+        grid.add(allorg, 0, 1, 2, 1);
+
+        HBox backBox = new HBox(back);
+        backBox.setAlignment(Pos.CENTER);
+        grid.add(backBox, 0, 3, 2, 1);
+
+        Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(scene);
     }
 
-    public void categoryDashboard(Stage stage, Runnable goBack)
-    {
+    public void categoryDashboard(Stage stage, Runnable goBack) {
         Label title = new Label("--- Category Dashboard ---");
+
         Button btnCreate = new Button("Create New Category");
         Button btnUpdate = new Button("Update Existing Category");
         Button btnRead = new Button("Read Existing Categories");
@@ -339,10 +411,10 @@ public class Admin extends User implements CRUD {
         Button btnTotal = new Button("Get Total Number of Categories");
         Button btnBack = new Button("Back");
 
-        btnCreate.setOnAction(e -> create(stage, this,() -> categoryDashboard(stage, goBack)));
-        btnUpdate.setOnAction(e -> update(stage,this, () -> categoryDashboard(stage, goBack)));
-        btnRead.setOnAction(e -> read(stage,this, () -> categoryDashboard(stage, goBack)));
-        btnDelete.setOnAction(e -> delete(stage,this, () -> categoryDashboard(stage, goBack)));
+        btnCreate.setOnAction(e -> create(stage, this, () -> categoryDashboard(stage, goBack)));
+        btnUpdate.setOnAction(e -> update(stage, this, () -> categoryDashboard(stage, goBack)));
+        btnRead.setOnAction(e -> read(stage, this, () -> categoryDashboard(stage, goBack)));
+        btnDelete.setOnAction(e -> delete(stage, this, () -> categoryDashboard(stage, goBack)));
         btnTotal.setOnAction(e -> {
             showAlert(Alert.AlertType.INFORMATION, "Total Categories", "Total Categories: " + Category.getNoOfCategories());
         });
@@ -353,12 +425,15 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 1, 0);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 3, 1);
+
         grid.add(btnCreate, 0, 1);
         grid.add(btnUpdate, 1, 1);
         grid.add(btnDelete, 2, 1);
         grid.add(btnRead, 0, 2);
-        grid.add(btnTotal,2,2);
+        grid.add(btnTotal, 2, 2);
         grid.add(btnBack, 1, 2);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
@@ -366,15 +441,13 @@ public class Admin extends User implements CRUD {
         stage.setScene(scene);
     }
 
-
-
-    public void addRoom(Stage stage, Runnable goback)
-    {
+    public void addRoom(Stage stage, Runnable goback) {
         Label title = new Label("Add a room");
         Label roomname = new Label("Room name: ");
-        TextField txtName= new TextField();
-        Button btnAdd= new Button("Add Room");
+        TextField txtName = new TextField();
+        Button btnAdd = new Button("Add Room");
         Button back = new Button("Back");
+
         btnAdd.setOnAction(e -> {
             String roomName = txtName.getText().trim();
             if (roomName.isEmpty()) {
@@ -398,11 +471,20 @@ public class Admin extends User implements CRUD {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        grid.add(title, 1, 0);
-        grid.add(roomname, 0, 1);
+        HBox titleBox = new HBox(title);
+        titleBox.setAlignment(Pos.CENTER);
+        grid.add(titleBox, 0, 0, 2, 1);
+
+        HBox roomnameBox = new HBox(roomname);
+        roomnameBox.setAlignment(Pos.CENTER);
+        grid.add(roomnameBox, 0, 1);
+
         grid.add(txtName, 1, 1);
-        grid.add(btnAdd, 0, 2);
-        grid.add(back, 1, 2);
+
+
+        HBox buttonsBox = new HBox(10, btnAdd, back);
+        buttonsBox.setAlignment(Pos.CENTER);
+        grid.add(buttonsBox, 0, 2, 2, 1);
 
         Scene scene = new Scene(new StackPane(grid), 600, 500);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
