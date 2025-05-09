@@ -81,8 +81,8 @@ public class MainApp extends Application {
 
         gridPane.add(lblWelcome, 0, 0, 2, 1);
         gridPane.add(btnAdmin, 0, 1);
-        gridPane.add(btnAttendee, 0, 2);
-        gridPane.add(btnOrganizer, 0, 3);
+        gridPane.add(btnOrganizer, 0, 2);
+        gridPane.add(btnAttendee, 0, 3);
         gridPane.add(btnBack, 0, 5);
 
         Scene scene = new Scene(gridPane, 600, 400);
@@ -111,8 +111,8 @@ public class MainApp extends Application {
 
         gridPane.add(lblWelcome, 0, 0, 2, 1);
         gridPane.add(btnadmin, 0, 1);
-        gridPane.add(btnattendee, 0, 2);
-        gridPane.add(btnorganizer, 0, 3);
+        gridPane.add(btnorganizer, 0, 2);
+        gridPane.add(btnattendee, 0, 3);
         gridPane.add(btnBack, 0, 5);
 
         Scene scene = new Scene(gridPane, 600, 400);
